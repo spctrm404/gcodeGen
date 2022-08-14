@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 26.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.1"
+   id="레이어_1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 500 600"
+   style="enable-background:new 0 0 500 600;"
+   xml:space="preserve"
+   sodipodi:docname="sample1_ink.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs27" /><sodipodi:namedview
+   id="namedview25"
+   pagecolor="#505050"
+   bordercolor="#eeeeee"
+   borderopacity="1"
+   inkscape:showpageshadow="0"
+   inkscape:pageopacity="0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#505050"
+   showgrid="false"
+   inkscape:zoom="1.7116667"
+   inkscape:cx="250.3408"
+   inkscape:cy="299.70789"
+   inkscape:window-width="3840"
+   inkscape:window-height="2054"
+   inkscape:window-x="3829"
+   inkscape:window-y="-11"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="레이어_1" />
+<style
+   type="text/css"
+   id="style2">
+	.st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st1{fill:#FF0000;}
+</style>
+<path
+   class="st0"
+   d="M53.5,40.5c101,66,68.75,167.17,24,239c-38,61-41,214,130,223s240-171,179-255"
+   id="path4" />
+<path
+   class="st0"
+   d="M45.5,87.5c151,9,124,190,211,236s185-21,188-104"
+   id="path6" />
+<line
+   class="st0"
+   x1="386.5"
+   y1="247.5"
+   x2="297.5"
+   y2="158.5"
+   id="line8" />
+<g
+   id="g14">
+	<rect
+   x="213.7"
+   y="74.7"
+   class="st1"
+   width="83.3"
+   height="83.3"
+   id="rect10" />
+	<path
+   d="M296.5,75.2v82.3h-82.3V75.2H296.5 M297.5,74.2h-84.3v84.3h84.3V74.2L297.5,74.2z"
+   id="path12" />
+</g>
+<path
+   class="st0"
+   d="M62.27,203c-28.62,76.66,37.12,130.33,120.75,121.39l99.28,127.45l36.22-53.22  c-43.38-38.01-120.3-12.97-123.43,28.62s45.61,55.45,45.61,55.45"
+   id="path16" />
+<ellipse
+   transform="matrix(0.5803 -0.8144 0.8144 0.5803 -107.2733 310.5369)"
+   class="st0"
+   cx="247.63"
+   cy="259.34"
+   rx="12.32"
+   ry="31.08"
+   id="ellipse18" />
+<g
+   id="g22">
+	
+		<rect
+   x="93.57"
+   y="389.23"
+   transform="matrix(0.3738 -0.9275 0.9275 0.3738 -310.2363 370.835)"
+   class="st1"
+   width="51.88"
+   height="51.88"
+   id="rect20" />
+</g>
+</svg>
