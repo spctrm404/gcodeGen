@@ -195,84 +195,25 @@ void setup() {
   float[] matrix = {1, 0, 0, 0, 1, 0};
   recursiveSvgToHmConversion(extractedSvgArry, svgHmList, matrix);
   printHmList(svgHmList);
-  println(convertSvgToGCode(svgHmList));
+  convertSvgToGCode(svgHmList);
 }
 
-String convertSvgToGCode(ArrayList<HashMap> svgHmList) {
+String[] convertSvgToGCode(ArrayList<HashMap> svgHmList) {
   String[] viewbox = null;
-  HashMap<String, String> firstHm = (HashMap<String, String>)svgHmList.get(0);
-  if (firstHm.containsKey("viewBox"))
-    viewbox = firstHm.get("viewBox").split(",");
+  if (svgHmList.get(0).containsKey("viewBox"))
+    viewbox = svgHmList.get(0).get("viewBox").split(",");
   println("fileName = " + fileName);
   println("pxPerMm = " + pxPerMm);
-  println("canvasWidth = " + (viewbox == null ? "undefined" : Float.parseFloat(viewbox[2])));
-  println("canvasHeight = " + (viewbox == null ? "undefined" : Float.parseFloat(viewbox[3])));
+  println("canvasWidth = " + viewbox == null ? "undefined" : Float.parseFloat(viewbox[2]));
+  println("canvasHeight = " +  viewbox == null ? "undefined" : Float.parseFloat(viewbox[3]));
   println("xyFeedrate = " + xyFeedrate);
   println("zFeedrate = " + zFeedrate);
   println("g1z = " + g1z);
   println("g0z = " + g0z);
   println("g4 = " + g4);
-  println("----------");
-  String gCodes = "";
-  //add safe start cmd;
   for (int i = 1; i < svgHmList.size(); i++) {
-    HashMap<String, String> hm = (HashMap<String, String>)svgHmList.get(i);
-    String name = hm.get("name");
-    if (name.equalsIgnoreCase("rect")) {
-      float x = Float.parseFloat(hm.get("x"));
-      float y = Float.parseFloat(hm.get("y"));
-      float width = Float.parseFloat(hm.get("width"));
-      float height = Float.parseFloat(hm.get("height"));
-      float[] matrix = {1, 0, 0, 0, 1, 0};
-      if (hm.containsKey("transform")) {
-        String[] matrixStr = hm.get("transform").split(",");
-        for (int j = 0; j < matrixStr.length; j++)
-          matrix[j] = Float.parseFloat(matrixStr[j]);
-      }
-      gCodes += gRect(x, y, width, height, matrix, pxPerMm);
-    } else if (name.equalsIgnoreCase("circle")) {
-    } else if (name.equalsIgnoreCase("ellipse")) {
-    } else if (name.equalsIgnoreCase("line")) {
-    } else if (name.equalsIgnoreCase("polyline")) {
-    } else if (name.equalsIgnoreCase("polygon")) {
-    } else if (name.equalsIgnoreCase("path")) {
-    }
+    HashMap hm = svgHmList.get(i);
   }
-  return gCodes;
-}
-
-String gRect(float x, float y, float width, float height, float[] matrix, float pxPerMm) {
-  String gCode = "";
-
-  float[] coord = {x, y};
-  float[] tCoord;
-
-  tCoord = applyMatrix(coord, matrix, pxPerMm);
-  gCode += "G0 x" + tCoord[0] + " Y" + tCoord[1]  + "\n";
-  gCode += "G4 P" + g4  + "\n";
-  gCode += "G1 Z" + g1z + " F" + zFeedrate  + "\n";
-  gCode += "G4 P" + g4  + "\n";
-
-  coord[0] = x + width;
-  tCoord = applyMatrix(coord, matrix, pxPerMm);
-  gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
-
-  coord[1] = y + height;
-  tCoord = applyMatrix(coord, matrix, pxPerMm);
-  gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
-
-  coord[0] = x;
-  tCoord = applyMatrix(coord, matrix, pxPerMm);
-  gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
-
-  coord[1] = y;
-  tCoord = applyMatrix(coord, matrix, pxPerMm);
-  gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
-
-  gCode += "G4 P" + g4  + "\n";
-  gCode += "G0 Z" + g0z  + "\n";
-
-  return gCode;
 }
 
 void draw() {
