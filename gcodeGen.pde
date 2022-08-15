@@ -2,63 +2,71 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-boolean isNumber(char c) {
-  return (c == '0'
-    || c == '1'
-    || c == '2'
-    || c == '3'
-    || c == '4'
-    || c == '5'
-    || c == '6'
-    || c == '7'
-    || c == '8'
-    || c == '9');
+boolean isDigit(char c) {
+  return(c == '0'
+    || c== '1'
+    || c== '2'
+    || c== '3'
+    || c== '4'
+    || c== '5'
+    || c== '6'
+    || c== '7'
+    || c== '8'
+    || c== '9');
 }
 
-String numExtractor(String str) {
+String extractNumFromString(String str) {
   String num = "";
   for (int i = 0; i < str.length(); i++) {
     char c = str.charAt(i);
-    if (isNumber(c)
-      || c == '.'
-      || c == '+'
-      || c == '-') {
-      if (c == '.'
-        && (num.contains(".")
-        || (i < str.length() - 1
-        && !isNumber(str.charAt(i))))) {
-      } else if (c == '+' && (num.contains("+") || num.length() > 0)) {
-      } else if (c == '-' && (num.contains("-") || num.length() > 0)) {
+    if (isDigit(c)) {
+      num +=c;
+    } else if (c == '.') {
+      if (!num.contains(".")) {
+        if (i < str.length() - 1) {
+          if (isDigit(str.charAt(i + 1))) {
+            num +=c;
+          }
+        }
       }
-      num += c;
+    } else if (c == '-') {
+      if (!num.contains("-")) {
+        if (num.length() == 0) {
+          if (i < str.length() - 1) {
+            if (isDigit(str.charAt(i + 1))) {
+              num +=c;
+            }
+          }
+        }
+      }
     }
   }
   return num;
 }
 
-String[] loadSvgCmds(String filename) {
-  String[] svgCmds = loadStrings(filename);
-  for (int i = 0; i < svgCmds.length; i++) {
-    String line = svgCmds[i];
-    println("[" + i + "]: " + line);
+String[] loadSVGAsStrings(String filename) {
+  String[] svgStrings = loadStrings(filename);
+  for (int i = 0; i < svgStrings.length; i++) {
+    String str = svgStrings[i];
+    println("[" + i + "]: " + str);
   }
-  return svgCmds;
+  return svgStrings;
 }
 
-String minifySVG(String[] svg) {
+String minifyStrings(String[] strs) {
   String minified = "";
-  for (String line : svg) {
+  for (String str : strs) {
     boolean prependSpace = false;
-    if (line.length() > 0) {
-      if (line.charAt(0) == ' ' || line.charAt(0) == '\t') {
+    if (str.length() > 0) {
+      if (str.charAt(0) == ' ' || str.charAt(0) == '\t') {
         prependSpace = true;
       }
-      String trimmed = line.trim();
+      String trimmed = str.trim();
       while (trimmed.contains("  ")) {
         trimmed = trimmed.replaceAll("  ", " ");
       }
       if (trimmed != "") {
-        minified += prependSpace? (" " + trimmed) : trimmed;
+        minified+= prependSpace ? (" " + trimmed) : trimmed;
       }
     }
   }
@@ -66,13 +74,15 @@ String minifySVG(String[] svg) {
   return minified;
 }
 
-String formattingSVG(String minified) {
+String svgStringFormatting(String minified) {
   String formatted = "";
   for (int i  = 0; i < minified.length(); i++) {
-    if (minified.charAt(i) == '-'
-      && i > 0
-      && (isNumber(minified.charAt(i - 1)))) {
-      formatted += ",";
+    if (minified.charAt(i) == '-') {
+      if (i > 0) {
+        if (isDigit(minified.charAt(i - 1))) {
+          formatted += ",";
+        }
+      }
     }
     formatted += minified.charAt(i);
   }
@@ -80,32 +90,32 @@ String formattingSVG(String minified) {
   return formatted;
 }
 
-String[] arrayingSVG(String minifiedSVG) {
-  ArrayList<String> cmds = new ArrayList<String>();
-  String cmd = "";
-  for (int i = 0; i < minifiedSVG.length(); i++) {
-    char c = minifiedSVG.charAt(i);
+String[] arrayingSVGString(String svgString) {
+  ArrayList<String> svgArrayList = new ArrayList<String>();
+  String svgCmd = "";
+  for (int i = 0; i < svgString.length(); i++) {
+    char c = svgString.charAt(i);
     if (c == '<') {
-      if (!cmd.equals("")) {
-        cmds.add(cmd.trim());
+      if (svgCmd.length() > 0) {
+        svgArrayList.add(svgCmd.trim());
       }
-      cmd = "";
+      svgCmd = "";
     } else if (c == '>') {
     } else if (c == '/') {
     } else {
-      cmd += c;
+      svgCmd += c;
     }
   }
-  String[] arrayed = cmds.toArray(new String[cmds.size()]);
-  for (int i = 0; i < arrayed.length; i++) {
-    String line = arrayed[i];
-    println("[" + i + "]: " + line);
-  }
+  String[] arrayed = svgArrayList.toArray(new String[svgArrayList.size()]);
+  // for (int i = 0; i < arrayed.length; i++) {
+  //   String line = arrayed[i];
+  //   println("[" + i + "]: " + line);
+  // }
   return arrayed;
 }
 
-String[] arrayingSVG(String[] svg) {
-  return arrayingSVG(formattingSVG(minifySVG(svg)));
+String[] arrayingSVGStrings(String[] svgStrings) {
+  return arrayingSVGString(svgStringFormatting(minifyStrings(svgStrings)));
 }
 
 HashMap<String, String> svgCmdToHashmap(String svgCmd) {
@@ -130,14 +140,14 @@ HashMap<String, String> svgCmdToHashmap(String svgCmd) {
     }
     hashmap.put(k, v);
     if (i == 1) {
-      String customK = "SVGcmd";
+      String customK = "svgCmd";
       String customV = prev[0].trim();
       hashmap.put(customK, customV);
     }
   }
-  for (Map.Entry entry : hashmap.entrySet()) {
-    println(entry.getKey() + ": " + entry.getValue());
-  }
+  // for (Map.Entry entry : hashmap.entrySet()) {
+  //   println(entry.getKey() + ": " + entry.getValue());
+  // }
   return hashmap;
 }
 
@@ -171,34 +181,33 @@ void setup() {
   background(255);
   noFill();
   stroke(0);
-  String[] svgCmds = loadSvgCmds("sample1_ink.svg");
-  //String[] svgCmds = loadSvgCmds("sample1_ai.svg");
-  svgCmds = arrayingSVG(svgCmds);
+  String[] svgStrings = arrayingSVGStrings(loadSVGAsStrings("sample1_ai.svg"));
   svgHashmaps = new ArrayList<HashMap<String, String>> ();
-  for (int i = 0; i < svgCmds.length; i++) {
-    String svgCmd = svgCmds[i];
-    addHashmap(svgCmd, svgHashmaps);
+  for (int i = 0; i < svgStrings.length; i++) {
+    String svgString = svgStrings[i];
+    addHashmap(svgString, svgHashmaps);
   }
   for (int i = 0; i < svgHashmaps.size(); i++) {
     HashMap<String, String>svgHashmap = svgHashmaps.get(i);
-    anal(svgHashmap);
+    convertToGCode(svgHashmap);
   }
 }
 
-void anal(HashMap<String, String>svgHashmap) {
+void convertToGCode(HashMap<String, String>svgHashmap) {
   float[] matrix = {1, 0, 0, 1, 0, 0};
   if (svgHashmap.containsKey("transform")) {
     String[] matrixVals = svgHashmap.get("transform").split(" ");
     for (int i = 0; i < matrixVals.length; i++) {
-      String number = numExtractor(matrixVals[i]);
+      String number = extractNumFromString(matrixVals[i]);
       matrix[i] = Float.parseFloat(number);
     }
   }
-  String svgCmd = svgHashmap.get("SVGcmd");
+  String svgCmd = svgHashmap.get("svgCmd");
   applyMatrix(matrix[0], matrix[2], matrix[4],
     matrix[1], matrix[3], matrix[5]);
   switch(svgCmd) {
   case "ellipse":
+    println("ellipse");
     float cx = Float.parseFloat(svgHashmap.get("cx"));
     float cy = Float.parseFloat(svgHashmap.get("cy"));
     float rx = Float.parseFloat(svgHashmap.get("rx"));
@@ -206,37 +215,179 @@ void anal(HashMap<String, String>svgHashmap) {
     ellipse(cx, cy, rx, ry);
     break;
   case "path":
+    println("path");
     String d = svgHashmap.get("d");
-    println(d);
-    
+    String[] dCmdArray = arrayingDCmd(d, extractDCmdIdx(d));
+    for (String dCmd : dCmdArray) {
+      println(dCmd);
+    }
+    interpreteDCmd(dCmdArray);
     break;
   }
   resetMatrix();
 }
 
-//get alphabet first
+boolean isDCmd(char c) {
+  return c == 'M'
+    || c == 'm'
+    || c == 'L'
+    || c == 'l'
+    || c == 'H'
+    || c == 'h'
+    || c == 'V'
+    || c == 'v'
+    || c == 'Z'
+    || c == 'z'
+    || c == 'C'
+    || c == 'c'
+    || c == 'S'
+    || c == 's'
+    || c == 'Q'
+    || c == 'q'
+    || c == 'T'
+    || c == 't'
+    || c == 'A'
+    || c == 'a';
+}
 
-String dAnal(String d, char key) {
-  String value = "";
-  int idx = d.indexOf(key);
-  if (idx != -1) {
-    for (int i = idx + 1; i < d.length(); i++) {
-      char c = d.charAt(i);
-      if (isNumber(c)
-        || c == '.' 
-        || c == '+' 
-        || c == '-' 
-        || c == ','
-        || c == ' ') {
-          value += c;
-        } else {
-          break;
-        }
-      }
-      return value;
+int[] extractDCmdIdx(String d) {
+  ArrayList<Integer> idxArrayList = new ArrayList<Integer>();
+  for (int i = 0; i < d.length(); i++) {
+    char c = d.charAt(i);
+    if (isDCmd(c)) {
+      idxArrayList.add(i);
     }
-    return value;
   }
+  int[] idxArray = new int[idxArrayList.size()];
+  for (int i = 0; i < idxArrayList.size(); i++) {
+    idxArray[i] = idxArrayList.get(i);
+  }
+  return idxArray;
+}
 
-  void draw() {
+String[] arrayingDCmd(String d, int[] dCmdIdx) {
+  String[] array = new String[dCmdIdx.length];
+  for (int i = 0; i < dCmdIdx.length; i++) {
+    int beginIdx = dCmdIdx[i];
+    int endIdx = (i == dCmdIdx.length - 1)? d.length() : dCmdIdx[i + 1];
+    array[i] = d.substring(beginIdx, endIdx);
   }
+  return array;
+}
+
+float rotate180(float curr, float mid) {
+  return 2 * mid - curr;
+}
+
+void interpreteDCmd(String[] dCmdArray) {
+  float[] origin = {0, 0};
+  float[] pos = {0, 0};
+  float[] ppos = {0, 0};
+  float[] pcp = {0, 0};
+  beginShape();
+  for (int i = 0; i < dCmdArray.length; i++) {
+    char c = dCmdArray[i].charAt(0);
+    String[] values = dCmdArray[i].substring(1).split(",");
+    if (i == 0) {
+      origin[0] = Float.parseFloat(values[0]);
+      origin[1] = Float.parseFloat(values[1]);
+    }
+    if (c == 'M' || c == 'm') {
+      pos[0] = Float.parseFloat(values[0]);
+      pos[1] = Float.parseFloat(values[1]);
+      if (c == 'M') {
+        vertex(pos[0], pos[1]);
+        ppos[0] = pos[0];
+        ppos[1] = pos[1];
+      } else {
+        vertex(ppos[0] + pos[0], ppos[1] + pos[1]);
+        ppos[0] = ppos[0] + pos[0];
+        ppos[1] = ppos[1] + pos[1];
+      }
+    } else if (c == 'L' || c == 'l') {
+      pos[0] = Float.parseFloat(values[0]);
+      pos[1] = Float.parseFloat(values[1]);
+      if (c == 'L') {
+        vertex(pos[0], pos[1]);
+        ppos[0] = pos[0];
+        ppos[1] = pos[1];
+      } else {
+        vertex(ppos[0] + pos[0], ppos[1] + pos[1]);
+        ppos[0] = ppos[0] + pos[0];
+        ppos[1] = ppos[1] + pos[1];
+      }
+    } else if (c == 'H' || c == 'h') {
+      pos[0] = Float.parseFloat(values[0]);
+      if (c == 'H') {
+        vertex(pos[0], pos[1]);
+        ppos[0] = pos[0];
+        ppos[1] = pos[1];
+      } else {
+        vertex(ppos[0] + pos[0], ppos[1] + pos[1]);
+        ppos[0] = ppos[0] + pos[0];
+        ppos[1] = ppos[1] + pos[1];
+      }
+      ppos[0] = pos[0];
+    } else if (c == 'V' || c == 'v') {
+      pos[1] = Float.parseFloat(values[0]);
+      if (c == 'V') {
+        vertex(pos[0], pos[1]);
+        ppos[0] = pos[0];
+        ppos[1] = pos[1];
+      } else {
+        vertex(ppos[0] + pos[0], ppos[1] + pos[1]);
+        ppos[0] = ppos[0] + pos[0];
+        ppos[1] = ppos[1] + pos[1];
+      }
+    } else if (c == 'Z' || c == 'z') {
+      vertex(origin[0], origin[1]);
+    } else if (c == 'C' || c == 'c') {
+      pos[0] = Float.parseFloat(values[4]);
+      pos[1] = Float.parseFloat(values[5]);
+      if (c == 'C') {
+        bezierVertex(Float.parseFloat(values[0]), Float.parseFloat(values[1]),
+          Float.parseFloat(values[2]), Float.parseFloat(values[3]),
+          pos[0], pos[1]);
+        pcp[0] = Float.parseFloat(values[2]);
+        pcp[1] = Float.parseFloat(values[3]);
+        ppos[0] = pos[0];
+        ppos[1] = pos[1];
+      } else {
+        bezierVertex(ppos[0] + Float.parseFloat(values[0]), ppos[1] + Float.parseFloat(values[1]),
+          ppos[0] + Float.parseFloat(values[2]), ppos[1] + Float.parseFloat(values[3]),
+          ppos[0] + pos[0], ppos[1] + pos[1]);
+        pcp[0] = ppos[0] + Float.parseFloat(values[2]);
+        pcp[1] = ppos[1] + Float.parseFloat(values[3]);
+        ppos[0] = ppos[0] + pos[0];
+        ppos[1] = ppos[1] + pos[1];
+      }
+    } else if (c == 'S' || c == 's') {
+      pos[0] = Float.parseFloat(values[2]);
+      pos[1] = Float.parseFloat(values[3]);
+      if (c == 'S') {
+        bezierVertex(rotate180(pcp[0], ppos[0]), rotate180(pcp[1], ppos[1]),
+          Float.parseFloat(values[0]), Float.parseFloat(values[1]),
+          pos[0], pos[1]);
+        pcp[0] = Float.parseFloat(values[2]);
+        pcp[1] = Float.parseFloat(values[3]);
+        ppos[0] = pos[0];
+        ppos[1] = pos[1];
+      } else {
+        bezierVertex(rotate180(pcp[0], ppos[0]), rotate180(pcp[1], ppos[1]),
+          ppos[0] + Float.parseFloat(values[0]), ppos[1] + Float.parseFloat(values[1]),
+          ppos[0] + pos[0], ppos[1] + pos[1]);
+        pcp[0] = ppos[0] + Float.parseFloat(values[2]);
+        pcp[1] = ppos[1] + Float.parseFloat(values[3]);
+        ppos[0] = ppos[0] + pos[0];
+        ppos[1] = ppos[1] + pos[1];
+      }
+    } else if (c == 'Q' || c == 'q') {
+    } else if (c == 'T' || c == 't') {
+    } else if (c == 'A' || c == 'a') {
+    }
+  }
+  endShape();
+}
+
+void draw() {
+}

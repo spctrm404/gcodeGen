@@ -26,8 +26,8 @@
    inkscape:deskcolor="#505050"
    showgrid="false"
    inkscape:zoom="1.7116667"
-   inkscape:cx="250.3408"
-   inkscape:cy="299.70789"
+   inkscape:cx="250.34079"
+   inkscape:cy="300.29211"
    inkscape:window-width="3840"
    inkscape:window-height="2054"
    inkscape:window-x="3829"
@@ -55,20 +55,15 @@
    x2="297.5"
    y2="158.5"
    id="line8" />
-<g
-   id="g14">
-	<rect
+
+<rect
    x="213.7"
    y="74.7"
    class="st1"
    width="83.3"
    height="83.3"
-   id="rect10" />
-	<path
-   d="M296.5,75.2v82.3h-82.3V75.2H296.5 M297.5,74.2h-84.3v84.3h84.3V74.2L297.5,74.2z"
-   id="path12" />
-</g>
-<path
+   id="rect10"
+   style="enable-background:new 0 0 500 600" /><path
    class="st0"
    d="M62.27,203c-28.62,76.66,37.12,130.33,120.75,121.39l99.28,127.45l36.22-53.22  c-43.38-38.01-120.3-12.97-123.43,28.62s45.61,55.45,45.61,55.45"
    id="path16" />
@@ -80,16 +75,13 @@
    rx="12.32"
    ry="31.08"
    id="ellipse18" />
-<g
-   id="g22">
-	
-		<rect
+<rect
    x="93.57"
    y="389.23"
-   transform="matrix(0.3738 -0.9275 0.9275 0.3738 -310.2363 370.835)"
+   transform="matrix(0.3738,-0.9275,0.9275,0.3738,-310.2363,370.835)"
    class="st1"
    width="51.88"
    height="51.88"
-   id="rect20" />
-</g>
+   id="rect20"
+   style="enable-background:new 0 0 500 600" />
 </svg>
