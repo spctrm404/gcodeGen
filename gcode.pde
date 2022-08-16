@@ -101,11 +101,11 @@ int[] getDCmdIdxAsArry(String d) {
 }
 
 String[] getDCmdAsStrArry(String d) {
-  int[] dCmdIdx = getDCmdIdxAsArry(d);
-  String[] dCmdArry = new String[dCmdIdx.length];
-  for (int i = 0; i < dCmdIdx.length; i++) {
-    int beginIdx = dCmdIdx[i];
-    int endIdx = (i == dCmdIdx.length - 1)? d.length() : dCmdIdx[i + 1];
+  int[] dCmdIdxArry = getDCmdIdxAsArry(d);
+  String[] dCmdArry = new String[dCmdIdxArry.length];
+  for (int i = 0; i < dCmdIdxArry.length; i++) {
+    int beginIdx = dCmdIdxArry[i];
+    int endIdx = (i == dCmdIdxArry.length - 1)? d.length() : dCmdIdxArry[i + 1];
     dCmdArry[i] = d.substring(beginIdx, endIdx);
   }
   return dCmdArry;

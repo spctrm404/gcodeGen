@@ -1,4 +1,4 @@
-void bezierTo_circular(float tolerance,
+float[][] bezierTo_circular(float tolerance,
   double x1,
   double y1,
   double cp1x,
@@ -8,6 +8,7 @@ void bezierTo_circular(float tolerance,
   double x2,
   double y2
   ) {
+    ArrayList<> arcList = new ArrayList<>();
   float t = 0;
   while (t < 1) {
     float e = 1;
@@ -37,7 +38,8 @@ void bezierTo_circular(float tolerance,
         double startAngle = angle(center, p1);
         double middleAngle = angle(center, p2);
         double endAngle = angle(center, p3);
-        arc((float)center[0], (float)center[1], (float) (2 * radius), (float) (2 * radius), (float)startAngle, (float)endAngle);
+        // arc((float)center[0], (float)center[1], (float) (2 * radius), (float) (2 * radius), (float)startAngle, (float)endAngle);
+        // p1, center p2
         t = e;
         break;
       } else {
