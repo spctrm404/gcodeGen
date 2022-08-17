@@ -120,8 +120,10 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
   double[] pCp = {0, 0};
   double[] tCoord;
 
+  if (render)
+    beginShape();
+
   for (String dCmd : dCmdArry) {
-    println("a");
     char c = dCmd.charAt(0);
     String[] valStr = dCmd.substring(1).split(",");
     if (c == 'M' || c == 'm') {
@@ -138,6 +140,8 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
       gCode += "G4 P" + g4  + "\n";
       gCode += "G1 Z" + g1z + " F" + zFeedrate  + "\n";
       gCode += "G4 P" + g4  + "\n";
+      if (render)
+        vertex((float) tCoord[0], (float) tCoord[1]);
       pCoord[0] = coord[0];
       pCoord[1] = coord[1];
     } else if (c == 'L' || c == 'l') {
@@ -150,6 +154,8 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
       }
       tCoord = applyMatrix(coord, matrix, pxPerMm);
       gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+      if (render)
+        vertex((float) tCoord[0], (float) tCoord[1]);
       pCoord[0] = coord[0];
       pCoord[1] = coord[1];
     } else if (c == 'H' || c == 'h') {
@@ -160,6 +166,8 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
       }
       tCoord = applyMatrix(coord, matrix, pxPerMm);
       gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+      if (render)
+        vertex((float) tCoord[0], (float) tCoord[1]);
       pCoord[0] = coord[0];
       pCoord[1] = coord[1];
     } else if (c == 'V' || c == 'v') {
@@ -170,59 +178,121 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
       }
       tCoord = applyMatrix(coord, matrix, pxPerMm);
       gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+      if (render)
+        vertex((float) tCoord[0], (float) tCoord[1]);
       pCoord[0] = coord[0];
       pCoord[1] = coord[1];
     } else if (c == 'Z' || c == 'z') {
       tCoord = applyMatrix(origin, matrix, pxPerMm);
       gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
-      pCoord[0] = coord[0];
-      pCoord[1] = coord[1];
+      if (render)
+        vertex((float) tCoord[0], (float) tCoord[1]);
+      pCoord[0] = origin[0];
+      pCoord[1] = origin[1];
     } else if (c == 'C' || c == 'c') {
-      // double[] bezier = {
-      //   pCoord[0], pCoord[1], //pt1
-      //   pCoord[0], pCoord[1], //cp1
-      //   pCoord[0], pCoord[1], //cp2
-      //   pCoord[0], pCoord[1]}; //pt2
-      // if (c == 'C') {
-      //   for (int i = 2; i < bezier.length; i++)
-      //     bezier[i] = Double.parseDouble(valStr[i - 2]);
-      // } else {
-      //   for (int i = 2; i < bezier.length; i++)
-      //     bezier[i] += Double.parseDouble(valStr[i - 2]);
-      // }
-      // double[] mBesizer = applyMatrix(bezier, matrix, pxPerMm);
-      // double[][] arcs = bezierTo_circular(
-      //   0.5,
-      //   mBesizer[0], mBesizer[1],
-      //   mBesizer[2], mBesizer[3],
-      //   mBesizer[4], mBesizer[5],
-      //   mBesizer[6], mBesizer[7]);
-      // for (int i = 0; i < arcs.length; i++) {
-      //   double[] arc = arcs[i];
-      //   double cx = arc[0];
-      //   double cy = arc[1];
-      //   double bx = arc[2];
-      //   double by = arc[3];
-      //   double ex = arc[4];
-      //   double ey = arc[5];
-      //   double isCw = arc[6];
-      //   gCode += ((isCw > 0.5) ? "G2" : "G3") + " X" + ex + " Y" + ey
-      //     + " I" + (cx - bx) + " J" + (cy - by)
-      //     + " F" + xyFeedrate  + "\n";
-      // }
-      // pCoord[0] = bezier[0];
-      // pCoord[1] = bezier[1];
-      // pCp[0] = bezier[4];
-      // pCp[1] = bezier[5];
-    } else if (c == 'S' || c == 's') {
-      if (c == 'S') {
+      double[] bezier = {
+        pCoord[0], pCoord[1], //pt1
+        pCoord[0], pCoord[1], //cp1
+        pCoord[0], pCoord[1], //cp2
+        pCoord[0], pCoord[1]}; //pt2
+      if (c == 'C') {
+        for (int i = 2; i < bezier.length; i++)
+          bezier[i] = Double.parseDouble(valStr[i - 2]);
       } else {
+        for (int i = 2; i < bezier.length; i++)
+          bezier[i] += Double.parseDouble(valStr[i - 2]);
       }
+      // printArray(valStr);
+      // printArray(bezier);
+      double[] mBezier = applyMatrix(bezier, matrix, pxPerMm);
+      // printArray(mBezier);
+      println("before interpolation");
+      double[][] arcs = bezierTo_circular(
+        0.1,
+        mBezier[0], mBezier[1],
+        mBezier[2], mBezier[3],
+        mBezier[4], mBezier[5],
+        mBezier[6], mBezier[7]);
+      println("end interpolation");
+      for (int i = 0; i < arcs.length; i++) {
+        double[] arc = arcs[i];
+        double cx = arc[0];
+        double cy = arc[1];
+        double bx = arc[2];
+        double by = arc[3];
+        double ex = arc[4];
+        double ey = arc[5];
+        double isCw = arc[6];
+        gCode += ((isCw > 0.5) ? "G2" : "G3") + " X" + ex + " Y" + ey
+          + " I" + (cx - bx) + " J" + (cy - by)
+          + " F" + xyFeedrate  + "\n";
+      }
+      if (render)
+        bezierVertex(
+          (float) mBezier[2], (float) mBezier[3],
+          (float) mBezier[4], (float) mBezier[5],
+          (float) mBezier[6], (float) mBezier[7]);
+      pCoord[0] = bezier[0];
+      pCoord[1] = bezier[1];
+      pCp[0] = bezier[4];
+      pCp[1] = bezier[5];
+    } else if (c == 'S' || c == 's') {
+      double[] pCpSym = pointSymetry_4(pCp[0], pCp[1], pCoord[0], pCoord[1]);
+      double[] bezier = {
+        pCoord[0], pCoord[1], //pt1
+        pCpSym[0], pCpSym[1], //cp1
+        pCoord[0], pCoord[1], //cp2
+        pCoord[0], pCoord[1]}; //pt2
+      if (c == 'S') {
+        for (int i = 4; i < bezier.length; i++)
+          bezier[i] = Double.parseDouble(valStr[i - 4]);
+      } else {
+        for (int i = 4; i < bezier.length; i++)
+          bezier[i] += Double.parseDouble(valStr[i - 4]);
+      }
+      // printArray(valStr);
+      // printArray(bezier);
+      double[] mBezier = applyMatrix(bezier, matrix, pxPerMm);
+      // printArray(mBezier);
+      println("before interpolation");
+      double[][] arcs = bezierTo_circular(
+        0.1,
+        mBezier[0], mBezier[1],
+        mBezier[2], mBezier[3],
+        mBezier[4], mBezier[5],
+        mBezier[6], mBezier[7]);
+      println("end interpolation");
+      for (int i = 0; i < arcs.length; i++) {
+        double[] arc = arcs[i];
+        double cx = arc[0];
+        double cy = arc[1];
+        double bx = arc[2];
+        double by = arc[3];
+        double ex = arc[4];
+        double ey = arc[5];
+        double isCw = arc[6];
+        gCode += ((isCw > 0.5) ? "G2" : "G3") + " X" + ex + " Y" + ey
+          + " I" + (cx - bx) + " J" + (cy - by)
+          + " F" + xyFeedrate  + "\n";
+      }
+      if (render)
+        bezierVertex(
+          (float) mBezier[2], (float) mBezier[3],
+          (float) mBezier[4], (float) mBezier[5],
+          (float) mBezier[6], (float) mBezier[7]);
+      pCoord[0] = bezier[0];
+      pCoord[1] = bezier[1];
+      pCp[0] = bezier[4];
+      pCp[1] = bezier[5];
     } else if (c == 'Q' || c == 'q') {
     } else if (c == 'T' || c == 't') {
     } else if (c == 'A' || c == 'a') {
     }
   }
+
+  if (render)
+    endShape();
+
   gCode += "G4 P" + g4  + "\n";
   gCode += "G0 Z" + g0z  + "\n";
   return gCode;

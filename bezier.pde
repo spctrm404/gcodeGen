@@ -19,9 +19,9 @@ double b3p3(double t, double p) {
 
 double b3(
   double t,
-  double p0, double p1,
-  double p2, double p3) {
-  return b3p0(t, p0) + b3p1(t, p1) + b3p2(t, p2) + b3p3(t, p3);
+  double p1, double p2,
+  double p3, double p4) {
+  return b3p0(t, p1) + b3p1(t, p2) + b3p2(t, p3) + b3p3(t, p4);
 }
 
 double[] bezierCurve_8(
@@ -30,7 +30,7 @@ double[] bezierCurve_8(
   double cx1, double cy1,
   double cx2, double cy2,
   double x2, double y2) {
-  double[] pt = {b3(t, x1, cx1, cx2, x2), b3(t, x1, cx1, cx2, x2)};
+  double[] pt = {b3(t, x1, cx1, cx2, x2), b3(t, y1, cy1, cy2, y2)};
   return pt;
 }
 
@@ -45,16 +45,16 @@ double[] bezierCurve(
 double arclength_approx(
   int subdivisions,
   double x1, double y1,
-  double cp1x, double cp1y,
-  double cp2x, double cp2y,
+  double cx1, double cy1,
+  double cx2, double cy2,
   double x2, double y2) {
   double px = x1;
   double py = y1;
   double length = 0;
   for (int i = 1; i <= subdivisions; i++) {
     float t = i / subdivisions;
-    double tx = b3(t, x1, cp1x, cp2x, x2);
-    double ty = b3(t, y1, cp1y, cp2y, y2);
+    double tx = b3(t, x1, cx1, cx2, x2);
+    double ty = b3(t, y1, cy1, cy2, y2);
     length += distance_4(px, py, tx, ty);
     px = tx;
     py = ty;

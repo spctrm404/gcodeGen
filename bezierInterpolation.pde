@@ -4,8 +4,10 @@ double[][] bezierTo_circular(
   double cp1x, double cp1y,
   double cp2x, double cp2y,
   double x2, double y2) {
+  println("into interpolation");
   ArrayList<double[]> arcList = new ArrayList<>();
   float t = 0;
+  int cnt = 0;
   while (t < 1) {
     float e = 1;
     while (true) {
@@ -34,8 +36,13 @@ double[][] bezierTo_circular(
         double startAngle = angle(center, p1);
         double middleAngle = angle(center, p2);
         double endAngle = angle(center, p3);
-        // arc((float)center[0], (float)center[1], (float) (2 * radius), (float) (2 * radius), (float)startAngle, (float)endAngle);
-        // p1, center p2
+        if (!render) {
+          stroke(cycleColor[cnt % 12]);
+          arc(
+            (float) center[0], (float) center[1],
+            (float) (2 * radius), (float) (2 * radius),
+            (float) startAngle, (float) endAngle);
+        }
         t = e;
         double[] arc = {
           center[0], center[1],
@@ -45,17 +52,20 @@ double[][] bezierTo_circular(
           2 * radius,
           startAngle, endAngle};
         arcList.add(arc);
+        cnt++;
         break;
       } else {
         e = n;
       }
     }
   }
-  double[][] acrArry = new double[arcList.size()][10];
+  println("total arcs..." + arcList.size());
+  double[][] arcArry = new double[arcList.size()][10];
   for (int i = 0; i < arcList.size(); i++)
     for (int j = 0; j < 10; j++)
-      acrArry[i][j] = arcList.get(i)[j];
-  return acrArry;
+      arcArry[i][j] = arcList.get(i)[j];
+  return arcArry;
+  // return null;
 }
 
 double computeCircularError(double[] pointOnCurve, double[] center, double radius) {

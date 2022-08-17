@@ -37,6 +37,8 @@ char[] supportedDCmdList = {
   'A', 'a'
 };
 
+boolean render = false;
+
 String fileName = "sample1_ai.svg";
 float pxPerMm = 1;
 int xyFeedrate = 6000;
@@ -46,6 +48,8 @@ float g0z = 5;
 float g4 = 0.05; //50ms
 
 void setup() {
+  size(800, 800);
+  noFill();
   XML svg;
   svg = loadXML(fileName);
   println(svg);

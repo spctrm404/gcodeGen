@@ -92,7 +92,7 @@ boolean isCw_6(
   double cx, double cy,
   double x1, double y1,
   double x2, double y2) {
-  double d = (x1 - cx)*(y2 - cy) - (x2 - cx)*(y1 - cy);
+  double d = (x1 - cx) * (y2 - cy) - (x2 - cx) * (y1 - cy);
   // if d == 0, the point 1, 2, 3 is colinear.
   return d < 0;
 }
