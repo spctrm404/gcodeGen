@@ -40,7 +40,8 @@ char[] supportedDCmdList = {
 boolean debug = false;
 boolean render = true;
 
-String fileName = "sz_print_01_unged.svg";
+//String fileName = "sz_print_01_unged.svg";
+String fileName = "sz_print_02_unged.svg";
 //String fileName = "sample1_ai.svg";
 float pxPerMm = 0.42333418000169333672000677334688;
 //float pxPerMm = 0.5;
