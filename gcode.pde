@@ -60,6 +60,8 @@ String convertSvgToGCode(ArrayList<HashMap> svgHmList) {
         gCodes += gPolygon(points, matrix, pxPerMm);
       } else if (name.equalsIgnoreCase("path")) {
         String d = fixDCCmd(hm.get("d"));
+        if (debug)
+          printArray(d);
         String[] dCmdArry = getDCmdAsStrArry(d);
         gCodes += gPath(dCmdArry, matrix, pxPerMm);
       }
@@ -162,7 +164,6 @@ String fixDCCmd(String d) {
       formatted += c;
     }
   }
-  println(formatted);
   return formatted;
 }
 
@@ -204,9 +205,13 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
   double[] pCoord = {0, 0};
   double[] pCp = {0, 0};
   double[] tCoord;
+  if (debug)
+    printArray(dCmdArry);
   if (render)
     beginShape();
   for (String dCmd : dCmdArry) {
+    if (debug)
+      println(dCmd);
     char c = dCmd.charAt(0);
     String[] valStr = dCmd.substring(1).split(",");
     if (c == 'M' || c == 'm') {
@@ -215,8 +220,8 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
           coord[0] = Double.parseDouble(valStr[0]);
           coord[1] = Double.parseDouble(valStr[1]);
         } else {
-          coord[0] += Double.parseDouble(valStr[0]);
-          coord[1] += Double.parseDouble(valStr[1]);
+          coord[0] = pCoord[0] + Double.parseDouble(valStr[0]);
+          coord[1] = pCoord[1] + Double.parseDouble(valStr[1]);
         }
         origin = coord.clone();
         tCoord = applyMatrix(coord, matrix, pxPerMm);
@@ -235,8 +240,8 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
           coord[0] = Double.parseDouble(valStr[0]);
           coord[1] = Double.parseDouble(valStr[1]);
         } else {
-          coord[0] += Double.parseDouble(valStr[0]);
-          coord[1] += Double.parseDouble(valStr[1]);
+          coord[0] = pCoord[0] + Double.parseDouble(valStr[0]);
+          coord[1] = pCoord[1] + Double.parseDouble(valStr[1]);
         }
         tCoord = applyMatrix(coord, matrix, pxPerMm);
         gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
@@ -250,7 +255,7 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
         if (c == 'H') {
           coord[0] = Double.parseDouble(valStr[0]);
         } else {
-          coord[0] += Double.parseDouble(valStr[0]);
+          coord[0] = pCoord[0] + Double.parseDouble(valStr[0]);
         }
         tCoord = applyMatrix(coord, matrix, pxPerMm);
         gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
@@ -264,7 +269,7 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
         if (c == 'V') {
           coord[1] = Double.parseDouble(valStr[0]);
         } else {
-          coord[1] += Double.parseDouble(valStr[0]);
+          coord[1] = pCoord[1] + Double.parseDouble(valStr[0]);
         }
         tCoord = applyMatrix(coord, matrix, pxPerMm);
         gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
@@ -294,6 +299,10 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
           bezier[i] += Double.parseDouble(valStr[i - 2]);
       }
       double[] mBezier = applyMatrix(bezier, matrix, pxPerMm);
+      if (debug) {
+        printArray(bezier);
+        printArray(mBezier);
+      }
       double[][] arcs = bezierTo_circular(
         bezierInterpolationTolerance,
         mBezier[0], mBezier[1],
@@ -337,6 +346,10 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
           bezier[i] += Double.parseDouble(valStr[i - 4]);
       }
       double[] mBezier = applyMatrix(bezier, matrix, pxPerMm);
+      if (debug) {
+        printArray(bezier);
+        printArray(mBezier);
+      }
       double[][] arcs = bezierTo_circular(
         bezierInterpolationTolerance,
         mBezier[0], mBezier[1],
