@@ -24,6 +24,8 @@ String leaveValOnly(String str) {
 String formatStr(String str) {
   String copied = "";
   copied += str;
+  while (copied.contains("  "))
+    copied = copied.replaceAll("  ", " ");
   while (copied.contains(" "))
     copied = copied.replaceAll(" ", ",");
   while (copied.contains(",,"))

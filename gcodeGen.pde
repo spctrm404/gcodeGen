@@ -39,7 +39,7 @@ char[] supportedDCmdList = {
 
 boolean render = true;
 
-String fileName = "sample1_ai.svg";
+String fileName = "sz_print_01_unged.svg";
 float pxPerMm = 1;
 int xyFeedrate = 6000;
 int zFeedrate = 2000;
@@ -65,9 +65,12 @@ void setup() {
   double[] matrix = {1, 0, 0, 0, 1, 0};
   recursiveSvgToHmConversion(extractedSvgTagArry, svgHmList, matrix);
   printHmList(svgHmList);
-  String gCodes = convertSvgToGCode(svgHmList);
+  String gCode = convertSvgToGCode(svgHmList);
   println("----- created gcode");
-  println(gCodes);
+  println(gCode);
+  String[] gCodeSave = gCode.split(" ");
+  saveStrings("output.gcode", gCodeSave);
+  println("done");
 }
 
 void draw() {
