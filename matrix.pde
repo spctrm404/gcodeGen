@@ -1,8 +1,8 @@
 double[] applyMatrix(double[] coord, double[] matrix, double pxPerMm) {
   double[] newCoord = coord.clone();
-  for(int i = 0; i < newCoord.length; i += 2) {
-  newCoord[i % 2] = pxPerMm * (matrix[0] * coord[i % 2] + matrix[1] * coord[(i + 1) % 2] + matrix[2]);
-  newCoord[(i + 1) % 2] = pxPerMm * (matrix[3] * coord[i % 2] + matrix[4] * coord[(i + 1) % 2] + matrix[5]);
+  for (int i = 0; i < newCoord.length; i += 2) {
+    newCoord[i % 2] = pxPerMm * (matrix[0] * coord[i % 2] + matrix[1] * coord[(i + 1) % 2] + matrix[2]);
+    newCoord[(i + 1) % 2] = pxPerMm * (matrix[3] * coord[i % 2] + matrix[4] * coord[(i + 1) % 2] + matrix[5]);
   }
   return newCoord;
 }

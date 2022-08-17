@@ -37,7 +37,7 @@ char[] supportedDCmdList = {
   'A', 'a'
 };
 
-boolean render = false;
+boolean render = true;
 
 String fileName = "sample1_ai.svg";
 float pxPerMm = 1;
@@ -47,23 +47,27 @@ float g1z = -1;
 float g0z = 5;
 float g4 = 0.05; //50ms
 
+float bezierInterpolationTolerance = 0.1;
+
 void setup() {
   size(800, 800);
   noFill();
   XML svg;
   svg = loadXML(fileName);
+  println("----- raw svg");
   println(svg);
-  printXml(svg, 0, "");
-  XML[] extractedSvgArry = getTargettedSvgTagsAsXmlArry(svg, null);
+  printXmlStructure(svg, 0, "");
+  XML[] extractedSvgTagArry = getTargettedSvgTagsAsXmlArry(svg, null);
+  println("----- extracted svg tags");
+  printArray(extractedSvgTagArry);
   ArrayList<HashMap> svgHmList = new ArrayList<>();
   svgHmList.add(getViewBoxInfoAsHm(svg));
-  for (XML xml : extractedSvgArry) {
-    println(xml);
-  }
   double[] matrix = {1, 0, 0, 0, 1, 0};
-  recursiveSvgToHmConversion(extractedSvgArry, svgHmList, matrix);
+  recursiveSvgToHmConversion(extractedSvgTagArry, svgHmList, matrix);
   printHmList(svgHmList);
-  println(convertSvgToGCode(svgHmList));
+  String gCodes = convertSvgToGCode(svgHmList);
+  println("----- created gcode");
+  println(gCodes);
 }
 
 void draw() {

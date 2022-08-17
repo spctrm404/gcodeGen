@@ -102,7 +102,7 @@ boolean isCw(double[] cp, double[] pt1, double[] pt2) {
 }
 
 double[] pointSymetry_4(double x, double y, double sx, double sy) {
-  double[] symetry = {2 * sx * x, 2 * sy - y};
+  double[] symetry = {2 * sx - x, 2 * sy - y};
   return symetry;
 }
 

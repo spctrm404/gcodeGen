@@ -4,7 +4,6 @@ double[][] bezierTo_circular(
   double cp1x, double cp1y,
   double cp2x, double cp2y,
   double x2, double y2) {
-  println("into interpolation");
   ArrayList<double[]> arcList = new ArrayList<>();
   float t = 0;
   int cnt = 0;
@@ -59,7 +58,6 @@ double[][] bezierTo_circular(
       }
     }
   }
-  println("total arcs..." + arcList.size());
   double[][] arcArry = new double[arcList.size()][10];
   for (int i = 0; i < arcList.size(); i++)
     for (int j = 0; j < 10; j++)

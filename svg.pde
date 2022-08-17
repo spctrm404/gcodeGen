@@ -1,16 +1,18 @@
-void printXml(XML xml, int depth, String path) {
+void printXmlStructure(XML xml, int depth, String path) {
   String depthDispStr = "";
   for (int i = 1; i < depth; i++)
     depthDispStr += "  ";
   if (depth > 0)
     depthDispStr += "└ ";
+  if (depth == 0)
+    println("----- xml structure");
   println(depthDispStr + xml.getName() + " (" + path + ")");
   if (xml.hasChildren()) {
     depth++;
     path += xml.getName() + "/";
     XML[] children = xml.getChildren();
     for (XML child : children)
-      printXml(child, depth, path);
+      printXmlStructure(child, depth, path);
   }
 }
 
@@ -120,8 +122,8 @@ HashMap<String, String> getSvgAttrAsHm(XML svg) {
   return null;
 }
 
-void recursiveSvgToHmConversion(XML[] extractedSvgArry, ArrayList<HashMap> svgHmList, double[] matrix) {
-  for (XML svgElem : extractedSvgArry) {
+void recursiveSvgToHmConversion(XML[] extractedSvgTagArry, ArrayList<HashMap> svgHmList, double[] matrix) {
+  for (XML svgElem : extractedSvgTagArry) {
     HashMap<String, String> hm = getSvgAttrAsHm(svgElem);
     if (hm != null) {
       double[] matrix_c = {1, 0, 0, 0, 1, 0};
@@ -144,11 +146,12 @@ void recursiveSvgToHmConversion(XML[] extractedSvgArry, ArrayList<HashMap> svgHm
 }
 
 void printHmList(ArrayList<HashMap> hmList) {
-  println("print");
-  for (HashMap<String, String> hm : hmList) {
-    println("----------");
+  println("----- svg hashmap");
+  for (int i = 0; i < hmList.size(); i++) {
+    println("[" + i + "] ┐");
+    HashMap<String, String> hm = hmList.get(i);
     for (Map.Entry entry : hm.entrySet()) {
-      print(entry.getKey() + " = ");
+      print("    " + entry.getKey() + ": ");
       println(entry.getValue());
     }
   }
