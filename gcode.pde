@@ -246,8 +246,8 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
         pCoord[1] = coord[1];
       }
     } else if (c == 'H' || c == 'h') {
-      if (c == 'H') {
-        if (valStr[0].length() > 0) {
+      if (valStr[0].length() > 0) {
+        if (c == 'H') {
           coord[0] = Double.parseDouble(valStr[0]);
         } else {
           coord[0] += Double.parseDouble(valStr[0]);

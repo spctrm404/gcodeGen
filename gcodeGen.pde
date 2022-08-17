@@ -68,7 +68,7 @@ void setup() {
   String gCode = convertSvgToGCode(svgHmList);
   println("----- created gcode");
   println(gCode);
-  String[] gCodeSave = gCode.split(" ");
+  String[] gCodeSave = gCode.split("\n");
   saveStrings("output.gcode", gCodeSave);
   println("done");
 }
