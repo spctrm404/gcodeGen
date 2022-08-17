@@ -1,14 +1,10 @@
-float[][] bezierTo_circular(float tolerance,
-  double x1,
-  double y1,
-  double cp1x,
-  double cp1y,
-  double cp2x,
-  double cp2y,
-  double x2,
-  double y2
-  ) {
-    ArrayList<> arcList = new ArrayList<>();
+double[][] bezierTo_circular(
+  float tolerance,
+  double x1, double y1,
+  double cp1x, double cp1y,
+  double cp2x, double cp2y,
+  double x2, double y2) {
+  ArrayList<double[]> arcList = new ArrayList<>();
   float t = 0;
   while (t < 1) {
     float e = 1;
@@ -41,12 +37,25 @@ float[][] bezierTo_circular(float tolerance,
         // arc((float)center[0], (float)center[1], (float) (2 * radius), (float) (2 * radius), (float)startAngle, (float)endAngle);
         // p1, center p2
         t = e;
+        double[] arc = {
+          center[0], center[1],
+          p1[0], p1[1],
+          p3[0], p3[1],
+          isCw(center, p1, p3) ? 1 : 0,
+          2 * radius,
+          startAngle, endAngle};
+        arcList.add(arc);
         break;
       } else {
         e = n;
       }
     }
   }
+  double[][] acrArry = new double[arcList.size()][10];
+  for (int i = 0; i < arcList.size(); i++)
+    for (int j = 0; j < 10; j++)
+      acrArry[i][j] = arcList.get(i)[j];
+  return acrArry;
 }
 
 double computeCircularError(double[] pointOnCurve, double[] center, double radius) {

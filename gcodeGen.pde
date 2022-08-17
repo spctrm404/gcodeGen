@@ -56,7 +56,7 @@ void setup() {
   for (XML xml : extractedSvgArry) {
     println(xml);
   }
-  float[] matrix = {1, 0, 0, 0, 1, 0};
+  double[] matrix = {1, 0, 0, 0, 1, 0};
   recursiveSvgToHmConversion(extractedSvgArry, svgHmList, matrix);
   printHmList(svgHmList);
   println(convertSvgToGCode(svgHmList));

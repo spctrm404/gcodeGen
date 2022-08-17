@@ -5,8 +5,8 @@ String convertSvgToGCode(ArrayList<HashMap> svgHmList) {
     viewbox = firstHm.get("viewBox").split(",");
   println("fileName = " + fileName);
   println("pxPerMm = " + pxPerMm);
-  println("canvasWidth = " + (viewbox == null ? "undefined" : Float.parseFloat(viewbox[2])));
-  println("canvasHeight = " + (viewbox == null ? "undefined" : Float.parseFloat(viewbox[3])));
+  println("canvasWidth = " + (viewbox == null ? "undefined" : Double.parseDouble(viewbox[2])));
+  println("canvasHeight = " + (viewbox == null ? "undefined" : Double.parseDouble(viewbox[3])));
   println("xyFeedrate = " + xyFeedrate);
   println("zFeedrate = " + zFeedrate);
   println("g1z = " + g1z);
@@ -19,17 +19,17 @@ String convertSvgToGCode(ArrayList<HashMap> svgHmList) {
     HashMap<String, String> hm = (HashMap<String, String>)svgHmList.get(i);
     String name = hm.get("name");
     if (isTargettedSvgTag(name)) {
-      float[] matrix = {1, 0, 0, 0, 1, 0};
+      double[] matrix = {1, 0, 0, 0, 1, 0};
       if (hm.containsKey("transform")) {
         String[] matrixStr = hm.get("transform").split(",");
         for (int j = 0; j < matrixStr.length; j++)
-          matrix[j] = Float.parseFloat(matrixStr[j]);
+          matrix[j] = Double.parseDouble(matrixStr[j]);
       }
       if (name.equalsIgnoreCase("rect")) {
-        float x = Float.parseFloat(hm.get("x"));
-        float y = Float.parseFloat(hm.get("y"));
-        float width = Float.parseFloat(hm.get("width"));
-        float height = Float.parseFloat(hm.get("height"));
+        double x = Double.parseDouble(hm.get("x"));
+        double y = Double.parseDouble(hm.get("y"));
+        double width = Double.parseDouble(hm.get("width"));
+        double height = Double.parseDouble(hm.get("height"));
         gCodes += gRect(x, y, width, height, matrix, pxPerMm);
       } else if (name.equalsIgnoreCase("circle")) {
       } else if (name.equalsIgnoreCase("ellipse")) {
@@ -46,11 +46,11 @@ String convertSvgToGCode(ArrayList<HashMap> svgHmList) {
   return gCodes;
 }
 
-String gRect(float x, float y, float width, float height, float[] matrix, float pxPerMm) {
+String gRect(double x, double y, double width, double height, double[] matrix, float pxPerMm) {
   String gCode = "";
 
-  float[] coord = {x, y};
-  float[] tCoord;
+  double[] coord = {x, y};
+  double[] tCoord;
 
   tCoord = applyMatrix(coord, matrix, pxPerMm);
   gCode += "G0 x" + tCoord[0] + " Y" + tCoord[1]  + "\n";
@@ -111,23 +111,26 @@ String[] getDCmdAsStrArry(String d) {
   return dCmdArry;
 }
 
-String gPath(String[] dCmdArry, float[] matrix, float pxPerMm) {
+String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
   String gCode = "";
 
-  float[] coord = {0, 0};
-  float[] origin = {0, 0};
-  float[] tCoord;
+  double[] origin = {0, 0};
+  double[] coord = {0, 0};
+  double[] pCoord = {0, 0};
+  double[] pCp = {0, 0};
+  double[] tCoord;
 
   for (String dCmd : dCmdArry) {
+    println("a");
     char c = dCmd.charAt(0);
     String[] valStr = dCmd.substring(1).split(",");
     if (c == 'M' || c == 'm') {
       if (c == 'M') {
-        coord[0] = Float.parseFloat(valStr[0]);
-        coord[1] = Float.parseFloat(valStr[1]);
+        coord[0] = Double.parseDouble(valStr[0]);
+        coord[1] = Double.parseDouble(valStr[1]);
       } else {
-        coord[0] += Float.parseFloat(valStr[0]);
-        coord[1] += Float.parseFloat(valStr[1]);
+        coord[0] += Double.parseDouble(valStr[0]);
+        coord[1] += Double.parseDouble(valStr[1]);
       }
       origin = coord.clone();
       tCoord = applyMatrix(coord, matrix, pxPerMm);
@@ -135,39 +138,82 @@ String gPath(String[] dCmdArry, float[] matrix, float pxPerMm) {
       gCode += "G4 P" + g4  + "\n";
       gCode += "G1 Z" + g1z + " F" + zFeedrate  + "\n";
       gCode += "G4 P" + g4  + "\n";
+      pCoord[0] = coord[0];
+      pCoord[1] = coord[1];
     } else if (c == 'L' || c == 'l') {
       if (c == 'L') {
-        coord[0] = Float.parseFloat(valStr[0]);
-        coord[1] = Float.parseFloat(valStr[1]);
+        coord[0] = Double.parseDouble(valStr[0]);
+        coord[1] = Double.parseDouble(valStr[1]);
       } else {
-        coord[0] += Float.parseFloat(valStr[0]);
-        coord[1] += Float.parseFloat(valStr[1]);
+        coord[0] += Double.parseDouble(valStr[0]);
+        coord[1] += Double.parseDouble(valStr[1]);
       }
       tCoord = applyMatrix(coord, matrix, pxPerMm);
       gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+      pCoord[0] = coord[0];
+      pCoord[1] = coord[1];
     } else if (c == 'H' || c == 'h') {
       if (c == 'H') {
-        coord[0] = Float.parseFloat(valStr[0]);
+        coord[0] = Double.parseDouble(valStr[0]);
       } else {
-        coord[0] += Float.parseFloat(valStr[0]);
+        coord[0] += Double.parseDouble(valStr[0]);
       }
       tCoord = applyMatrix(coord, matrix, pxPerMm);
       gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+      pCoord[0] = coord[0];
+      pCoord[1] = coord[1];
     } else if (c == 'V' || c == 'v') {
       if (c == 'V') {
-        coord[1] = Float.parseFloat(valStr[0]);
+        coord[1] = Double.parseDouble(valStr[0]);
       } else {
-        coord[1] += Float.parseFloat(valStr[0]);
+        coord[1] += Double.parseDouble(valStr[0]);
       }
       tCoord = applyMatrix(coord, matrix, pxPerMm);
       gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+      pCoord[0] = coord[0];
+      pCoord[1] = coord[1];
     } else if (c == 'Z' || c == 'z') {
       tCoord = applyMatrix(origin, matrix, pxPerMm);
       gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+      pCoord[0] = coord[0];
+      pCoord[1] = coord[1];
     } else if (c == 'C' || c == 'c') {
-      if (c == 'C') {
-      } else {
-      }
+      // double[] bezier = {
+      //   pCoord[0], pCoord[1], //pt1
+      //   pCoord[0], pCoord[1], //cp1
+      //   pCoord[0], pCoord[1], //cp2
+      //   pCoord[0], pCoord[1]}; //pt2
+      // if (c == 'C') {
+      //   for (int i = 2; i < bezier.length; i++)
+      //     bezier[i] = Double.parseDouble(valStr[i - 2]);
+      // } else {
+      //   for (int i = 2; i < bezier.length; i++)
+      //     bezier[i] += Double.parseDouble(valStr[i - 2]);
+      // }
+      // double[] mBesizer = applyMatrix(bezier, matrix, pxPerMm);
+      // double[][] arcs = bezierTo_circular(
+      //   0.5,
+      //   mBesizer[0], mBesizer[1],
+      //   mBesizer[2], mBesizer[3],
+      //   mBesizer[4], mBesizer[5],
+      //   mBesizer[6], mBesizer[7]);
+      // for (int i = 0; i < arcs.length; i++) {
+      //   double[] arc = arcs[i];
+      //   double cx = arc[0];
+      //   double cy = arc[1];
+      //   double bx = arc[2];
+      //   double by = arc[3];
+      //   double ex = arc[4];
+      //   double ey = arc[5];
+      //   double isCw = arc[6];
+      //   gCode += ((isCw > 0.5) ? "G2" : "G3") + " X" + ex + " Y" + ey
+      //     + " I" + (cx - bx) + " J" + (cy - by)
+      //     + " F" + xyFeedrate  + "\n";
+      // }
+      // pCoord[0] = bezier[0];
+      // pCoord[1] = bezier[1];
+      // pCp[0] = bezier[4];
+      // pCp[1] = bezier[5];
     } else if (c == 'S' || c == 's') {
       if (c == 'S') {
       } else {

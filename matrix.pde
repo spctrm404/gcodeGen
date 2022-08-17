@@ -1,12 +1,14 @@
-float[] applyMatrix(float[] coord, float[] matrix, float pxPerMm) {
-  float[] newCoord = coord.clone();
-  newCoord[0] = pxPerMm * (matrix[0] * newCoord[0] + matrix[1] * newCoord[1] + matrix[2]);
-  newCoord[1] = pxPerMm * (matrix[3] * newCoord[0] + matrix[4] * newCoord[1] + matrix[5]);
+double[] applyMatrix(double[] coord, double[] matrix, double pxPerMm) {
+  double[] newCoord = coord.clone();
+  for(int i = 0; i < newCoord.length; i += 2) {
+  newCoord[i % 2] = pxPerMm * (matrix[0] * newCoord[0] + matrix[1] * newCoord[1] + matrix[2]);
+  newCoord[(i + 1) % 2] = pxPerMm * (matrix[3] * newCoord[0] + matrix[4] * newCoord[1] + matrix[5]);
+  }
   return newCoord;
 }
 
-float[] convertTransformToMarix(String transform, float[] attrVal) {
-  float[] matrix = {1, 0, 0, 0, 1, 0};
+double[] convertTransformToMarix(String transform, double[] attrVal) {
+  double[] matrix = {1, 0, 0, 0, 1, 0};
   if (transform.equalsIgnoreCase("matrix")) {
     matrix[0] = attrVal[0];
     matrix[1] = attrVal[2];
@@ -21,8 +23,8 @@ float[] convertTransformToMarix(String transform, float[] attrVal) {
     matrix[0] = attrVal[0];
     matrix[4] = attrVal.length == 2 ? attrVal[1] : attrVal[0];
   } else if (transform.equalsIgnoreCase("rotate")) {
-    float sin = (float) Math.sin(Math.toRadians(attrVal[0]));
-    float cos = (float) Math.cos(Math.toRadians(attrVal[0]));
+    double sin = Math.sin(Math.toRadians(attrVal[0]));
+    double cos = Math.cos(Math.toRadians(attrVal[0]));
     matrix[0] = cos;
     matrix[1] = -sin;
     matrix[3] = sin;
@@ -32,17 +34,17 @@ float[] convertTransformToMarix(String transform, float[] attrVal) {
       matrix[5] = attrVal[2] * (1 - cos) - attrVal[1] * sin;
     }
   } else if (transform.equalsIgnoreCase("skewX")) {
-    float tan = (float) Math.tan(Math.toRadians(attrVal[0]));
+    double tan = Math.tan(Math.toRadians(attrVal[0]));
     matrix[1] = tan;
   } else if (transform.equalsIgnoreCase("skewY")) {
-    float tan = (float) Math.tan(Math.toRadians(attrVal[0]));
+    double tan = Math.tan(Math.toRadians(attrVal[0]));
     matrix[3] = tan;
   }
   return matrix;
 }
 
-float[] matrixMult(float[] matrix_p, float[] matrix_m) {
-  float[] newMatrix = new float[6];
+double[] matrixMult(double[] matrix_p, double[] matrix_m) {
+  double[] newMatrix = new double[6];
   newMatrix[0] = matrix_p[0] * matrix_m[0] + matrix_p[2] * matrix_m[1] + 0;
   newMatrix[2] = matrix_p[0] * matrix_m[2] + matrix_p[2] * matrix_m[3] + 0;
   newMatrix[4] = matrix_p[0] * matrix_m[4] + matrix_p[2] * matrix_m[5] + matrix_p[4];

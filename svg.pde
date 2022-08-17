@@ -1,3 +1,19 @@
+void printXml(XML xml, int depth, String path) {
+  String depthDispStr = "";
+  for (int i = 1; i < depth; i++)
+    depthDispStr += "  ";
+  if (depth > 0)
+    depthDispStr += "└ ";
+  println(depthDispStr + xml.getName() + " (" + path + ")");
+  if (xml.hasChildren()) {
+    depth++;
+    path += xml.getName() + "/";
+    XML[] children = xml.getChildren();
+    for (XML child : children)
+      printXml(child, depth, path);
+  }
+}
+
 boolean isTargettedSvgTag(String name) {
   for (String targettedSvgTag : tagettedSvgTagList)
     if (name.equals(targettedSvgTag))
@@ -46,11 +62,11 @@ void putSvgAttrOnHm(XML svg, String attrName, HashMap hm) {
     String attrValStr = formatStr(svg.getString(attrName).trim());
     if (attrName.equals("transform")) {
       String[] splitted = leaveValOnly(attrValStr).split(",");
-      float[] attrVal = new float[splitted.length];
+      double[] attrVal = new double[splitted.length];
       for (int i = 0; i < splitted.length; i++)
-        attrVal[i] = Float.parseFloat(splitted[i]);
+        attrVal[i] = Double.parseDouble(splitted[i]);
       boolean isSupported = isSupportedTfSyntax(attrValStr);
-      float[] matrix = {1, 0, 0, 0, 1, 0};
+      double[] matrix = {1, 0, 0, 0, 1, 0};
       if (isSupported)
         matrix = convertTransformToMarix(getSupportedTfSyntax(attrValStr), attrVal);
       String matrixStr = "";
@@ -104,20 +120,20 @@ HashMap<String, String> getSvgAttrAsHm(XML svg) {
   return null;
 }
 
-void recursiveSvgToHmConversion(XML[] extractedSvgArry, ArrayList<HashMap> svgHmList, float[] matrix) {
+void recursiveSvgToHmConversion(XML[] extractedSvgArry, ArrayList<HashMap> svgHmList, double[] matrix) {
   for (XML svgElem : extractedSvgArry) {
     HashMap<String, String> hm = getSvgAttrAsHm(svgElem);
     if (hm != null) {
-      float[] matrix_c = {1, 0, 0, 0, 1, 0};
+      double[] matrix_c = {1, 0, 0, 0, 1, 0};
       if (!hm.get("name").equals("g")) {
         svgHmList.add(hm);
       } else if (svgElem.hasChildren()) {
-        float[] matrix_p = matrix.clone();
+        double[] matrix_p = matrix.clone();
         if (hm.containsKey("transform")) {
           String[] matrix_m_Str = hm.get("transform").split(",");
-          float[] matrix_m = new float[matrix_m_Str.length];
+          double[] matrix_m = new double[matrix_m_Str.length];
           for (int i = 0; i < matrix_m_Str.length; i++)
-            matrix_m[i] = Float.parseFloat(matrix_m_Str[i]);
+            matrix_m[i] = Double.parseDouble(matrix_m_Str[i]);
           matrix_c = matrixMult(matrix_p, matrix_m);
         }
         XML[] children = svgElem.getChildren();

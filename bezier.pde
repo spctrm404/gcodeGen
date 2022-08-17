@@ -47,8 +47,7 @@ double arclength_approx(
   double x1, double y1,
   double cp1x, double cp1y,
   double cp2x, double cp2y,
-  double x2, double y2
-  ) {
+  double x2, double y2) {
   double px = x1;
   double py = y1;
   double length = 0;

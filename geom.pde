@@ -87,3 +87,25 @@ double angle_4(
 double angle(double[] pt1, double[] pt2) {
   return angle_4(pt1[0], pt1[1], pt2[0], pt2[1]);
 }
+
+boolean isCw_6(
+  double cx, double cy,
+  double x1, double y1,
+  double x2, double y2) {
+  double d = (x1 - cx)*(y2 - cy) - (x2 - cx)*(y1 - cy);
+  // if d == 0, the point 1, 2, 3 is colinear.
+  return d < 0;
+}
+
+boolean isCw(double[] cp, double[] pt1, double[] pt2) {
+  return isCw_6(cp[0], cp[1], pt1[0], pt1[1], pt2[0], pt2[1]);
+}
+
+double[] pointSymetry_4(double x, double y, double sx, double sy) {
+  double[] symetry = {2 * sx * x, 2 * sy - y};
+  return symetry;
+}
+
+double[] pointSymetry(double[] pt, double[] symPt) {
+  return pointSymetry_4(pt[0], pt[1], symPt[0], symPt[1]);
+}
