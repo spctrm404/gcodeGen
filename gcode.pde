@@ -75,22 +75,22 @@ String gRect(double x, double y, double width, double height, double[] matrix, f
   double[] coord = {x, y};
   double[] tCoord;
   tCoord = applyMatrix(coord, matrix, pxPerMm);
-  gCode += "G0 x" + tCoord[0] + " Y" + tCoord[1]  + "\n";
+  gCode += "G0 x" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1])  + "\n";
   gCode += "G4 P" + g4  + "\n";
   gCode += "G1 Z" + g1z + " F" + zFeedrate  + "\n";
   gCode += "G4 P" + g4  + "\n";
   coord[0] = x + width;
   tCoord = applyMatrix(coord, matrix, pxPerMm);
-  gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+  gCode += "G1 X" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1]) + " F" + xyFeedrate  + "\n";
   coord[1] = y + height;
   tCoord = applyMatrix(coord, matrix, pxPerMm);
-  gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+  gCode += "G1 X" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1]) + " F" + xyFeedrate  + "\n";
   coord[0] = x;
   tCoord = applyMatrix(coord, matrix, pxPerMm);
-  gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+  gCode += "G1 X" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1]) + " F" + xyFeedrate  + "\n";
   coord[1] = y;
   tCoord = applyMatrix(coord, matrix, pxPerMm);
-  gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+  gCode += "G1 X" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1]) + " F" + xyFeedrate  + "\n";
   gCode += "G4 P" + g4  + "\n";
   gCode += "G0 Z" + g0z  + "\n";
 
@@ -102,11 +102,11 @@ String gCircle(double cx, double cy, double r, double[] matrix, float pxPerMm) {
   // double[] coord = {cx, cy};
   // double[] tCoord;
   // tCoord = applyMatrix(coord, matrix, pxPerMm);
-  // gCode += "G0 x" + tCoord[0] + " Y" + tCoord[1]  + "\n";
+  // gCode += "G0 x" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1])  + "\n";
   // gCode += "G4 P" + g4  + "\n";
   // gCode += "G1 Z" + g1z + " F" + zFeedrate  + "\n";
   // gCode += "G4 P" + g4  + "\n";
-  // gCode += "G2 x" + tCoord[0] + " Y" + tCoord[1] + " I" + tCoord[0] + " J" + tCoord[1] + "\n";
+  // gCode += "G2 x" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1]) + " I" + String.format("%.6f", tCoord[0]) + " J" + String.format("%.6f", tCoord[1]) + "\n";
   // gCode += "G4 P" + g4  + "\n";
   // gCode += "G0 Z" + g0z  + "\n";
 
@@ -123,14 +123,14 @@ String gLine(double x1, double y1, double x2, double y2, double[] matrix, float 
   double[] coord = {x1, y1};
   double[] tCoord;
   tCoord = applyMatrix(coord, matrix, pxPerMm);
-  gCode += "G0 x" + tCoord[0] + " Y" + tCoord[1]  + "\n";
+  gCode += "G0 x" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1])  + "\n";
   gCode += "G4 P" + g4  + "\n";
   gCode += "G1 Z" + g1z + " F" + zFeedrate  + "\n";
   gCode += "G4 P" + g4  + "\n";
   coord[0] = x1;
   coord[1] = y2;
   tCoord = applyMatrix(coord, matrix, pxPerMm);
-  gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+  gCode += "G1 X" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1]) + " F" + xyFeedrate  + "\n";
   gCode += "G4 P" + g4  + "\n";
   gCode += "G0 Z" + g0z  + "\n";
   return gCode;
@@ -154,9 +154,8 @@ String fixDCCmd(String d) {
       if (c == ',') {
         char pc = d.charAt(i - 1);
         char nc = d.charAt(i + 1);
-        if (isDigit(pc) && (isDigit(nc) || nc == '.' || nc == '-')) {
+        if (isDigit(pc) && (isDigit(nc) || nc == '.' || nc == '-'))
           formatted += c;
-        }
       } else {
         formatted += c;
       }
@@ -215,72 +214,64 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
     char c = dCmd.charAt(0);
     String[] valStr = dCmd.substring(1).split(",");
     if (c == 'M' || c == 'm') {
-      if (valStr[0].length() > 0 && valStr[1].length() > 0) {
-        if (c == 'M') {
-          coord[0] = Double.parseDouble(valStr[0]);
-          coord[1] = Double.parseDouble(valStr[1]);
-        } else {
-          coord[0] = pCoord[0] + Double.parseDouble(valStr[0]);
-          coord[1] = pCoord[1] + Double.parseDouble(valStr[1]);
-        }
-        origin = coord.clone();
-        tCoord = applyMatrix(coord, matrix, pxPerMm);
-        gCode += "G0 x" + tCoord[0] + " Y" + tCoord[1]  + "\n";
-        gCode += "G4 P" + g4  + "\n";
-        gCode += "G1 Z" + g1z + " F" + zFeedrate  + "\n";
-        gCode += "G4 P" + g4  + "\n";
-        if (render)
-          vertex((float) tCoord[0], (float) tCoord[1]);
-        pCoord[0] = coord[0];
-        pCoord[1] = coord[1];
+      if (c == 'M') {
+        coord[0] = Double.parseDouble(valStr[0]);
+        coord[1] = Double.parseDouble(valStr[1]);
+      } else {
+        coord[0] = pCoord[0] + Double.parseDouble(valStr[0]);
+        coord[1] = pCoord[1] + Double.parseDouble(valStr[1]);
       }
+      origin = coord.clone();
+      tCoord = applyMatrix(coord, matrix, pxPerMm);
+      gCode += "G0 x" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1])  + "\n";
+      gCode += "G4 P" + g4  + "\n";
+      gCode += "G1 Z" + g1z + " F" + zFeedrate  + "\n";
+      gCode += "G4 P" + g4  + "\n";
+      if (render)
+        vertex((float) tCoord[0], (float) tCoord[1]);
+      pCoord[0] = coord[0];
+      pCoord[1] = coord[1];
     } else if (c == 'L' || c == 'l') {
-      if (valStr[0].length() > 0 && valStr[1].length() > 0) {
-        if (c == 'L') {
-          coord[0] = Double.parseDouble(valStr[0]);
-          coord[1] = Double.parseDouble(valStr[1]);
-        } else {
-          coord[0] = pCoord[0] + Double.parseDouble(valStr[0]);
-          coord[1] = pCoord[1] + Double.parseDouble(valStr[1]);
-        }
-        tCoord = applyMatrix(coord, matrix, pxPerMm);
-        gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
-        if (render)
-          vertex((float) tCoord[0], (float) tCoord[1]);
-        pCoord[0] = coord[0];
-        pCoord[1] = coord[1];
+      if (c == 'L') {
+        coord[0] = Double.parseDouble(valStr[0]);
+        coord[1] = Double.parseDouble(valStr[1]);
+      } else {
+        coord[0] = pCoord[0] + Double.parseDouble(valStr[0]);
+        coord[1] = pCoord[1] + Double.parseDouble(valStr[1]);
       }
+      tCoord = applyMatrix(coord, matrix, pxPerMm);
+      gCode += "G1 X" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1]) + " F" + xyFeedrate  + "\n";
+      if (render)
+        vertex((float) tCoord[0], (float) tCoord[1]);
+      pCoord[0] = coord[0];
+      pCoord[1] = coord[1];
     } else if (c == 'H' || c == 'h') {
-      if (valStr[0].length() > 0) {
-        if (c == 'H') {
-          coord[0] = Double.parseDouble(valStr[0]);
-        } else {
-          coord[0] = pCoord[0] + Double.parseDouble(valStr[0]);
-        }
-        tCoord = applyMatrix(coord, matrix, pxPerMm);
-        gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
-        if (render)
-          vertex((float) tCoord[0], (float) tCoord[1]);
-        pCoord[0] = coord[0];
-        pCoord[1] = coord[1];
+      if (c == 'H') {
+        coord[0] = Double.parseDouble(valStr[0]);
+      } else {
+        coord[0] = pCoord[0] + Double.parseDouble(valStr[0]);
       }
+      tCoord = applyMatrix(coord, matrix, pxPerMm);
+      gCode += "G1 X" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1]) + " F" + xyFeedrate  + "\n";
+      if (render)
+        vertex((float) tCoord[0], (float) tCoord[1]);
+      pCoord[0] = coord[0];
+      pCoord[1] = coord[1];
     } else if (c == 'V' || c == 'v') {
-      if (valStr[0].length() > 0) {
-        if (c == 'V') {
-          coord[1] = Double.parseDouble(valStr[0]);
-        } else {
-          coord[1] = pCoord[1] + Double.parseDouble(valStr[0]);
-        }
-        tCoord = applyMatrix(coord, matrix, pxPerMm);
-        gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
-        if (render)
-          vertex((float) tCoord[0], (float) tCoord[1]);
-        pCoord[0] = coord[0];
-        pCoord[1] = coord[1];
+      if (c == 'V') {
+        coord[1] = Double.parseDouble(valStr[0]);
+      } else {
+        coord[1] = pCoord[1] + Double.parseDouble(valStr[0]);
       }
+      tCoord = applyMatrix(coord, matrix, pxPerMm);
+      gCode += "G1 X" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1]) + " F" + xyFeedrate  + "\n";
+      if (render)
+        vertex((float) tCoord[0], (float) tCoord[1]);
+      pCoord[0] = coord[0];
+      pCoord[1] = coord[1];
     } else if (c == 'Z' || c == 'z') {
       tCoord = applyMatrix(origin, matrix, pxPerMm);
-      gCode += "G1 X" + tCoord[0] + " Y" + tCoord[1] + " F" + xyFeedrate  + "\n";
+      gCode += "G1 X" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1]) + " F" + xyFeedrate  + "\n";
       if (render)
         vertex((float) tCoord[0], (float) tCoord[1]);
       pCoord[0] = origin[0];
@@ -318,8 +309,8 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
         double ex = arc[4];
         double ey = arc[5];
         double isCw = arc[6];
-        gCode += (isCw > 0.5 ? "G2" : "G3") + " X" + ex + " Y" + ey
-          + " I" + (cx - bx) + " J" + (cy - by)
+        gCode += (isCw > 0.5 ? "G2" : "G3") + " X" + String.format("%.6f", ex) + " Y" + String.format("%.6f", ey)
+          + " I" + String.format("%.6f", (cx - bx)) + " J" + String.format("%.6f", (cy - by))
           + " F" + xyFeedrate  + "\n";
       }
       if (render)
@@ -365,8 +356,8 @@ String gPath(String[] dCmdArry, double[] matrix, float pxPerMm) {
         double ex = arc[4];
         double ey = arc[5];
         double isCw = arc[6];
-        gCode += (isCw > 0.5 ? "G2" : "G3") + " X" + ex + " Y" + ey
-          + " I" + (cx - bx) + " J" + (cy - by)
+        gCode += (isCw > 0.5 ? "G2" : "G3") + " X" + String.format("%.6f", ex) + " Y" + String.format("%.6f", ey)
+          + " I" + String.format("%.6f", (cx - bx)) + " J" + String.format("%.6f", (cy - by))
           + " F" + xyFeedrate  + "\n";
       }
       if (render)

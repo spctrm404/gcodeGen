@@ -1,7 +1,8 @@
-//to do
+// to do
 // check for
 // check equal and contain (case)
 
+import java.util.Calendar;
 import java.util.Map;
 
 String[] tagettedSvgTagList = {
@@ -40,10 +41,10 @@ char[] supportedDCmdList = {
 boolean debug = false;
 boolean render = true;
 
-//String fileName = "sz_print_01_unged.svg";
-String fileName = "sz_print_02_unged.svg";
+String fileName = "sz_print_01-ai.svg";
+//String fileName = "sz_print_02-ai.svg";
 //String fileName = "sample1_ai.svg";
-float pxPerMm = 0.42333418000169333672000677334688;
+float pxPerMm = 0.35277849670096045553691224446998;
 //float pxPerMm = 0.5;
 //float pxPerMm = 1;
 int xyFeedrate = 6000;
@@ -74,7 +75,7 @@ void setup() {
   //println("----- created gcode");
   //println(gCode);
   String[] gCodeSave = gCode.split("\n");
-  saveStrings("output.gcode", gCodeSave);
+  saveStrings("output/" + timestamp() + ".gcode", gCodeSave);
   println("done");
 }
 

@@ -1,4 +1,4 @@
-int[] cycleColor = {
+int[] cycleColors = {
   0xFFCD00E5,
   0xFF8B51FF,
   0xFF006EFF,

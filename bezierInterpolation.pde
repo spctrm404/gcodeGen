@@ -36,7 +36,7 @@ double[][] bezierTo_circular(
         double middleAngle = angle(center, p2);
         double endAngle = angle(center, p3);
         if (!render) {
-          stroke(cycleColor[cnt % 12]);
+          stroke(cycleColors[cnt % 12]);
           arc(
             (float) center[0], (float) center[1],
             (float) (2 * radius), (float) (2 * radius),

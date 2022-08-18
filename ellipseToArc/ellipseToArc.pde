@@ -18,7 +18,7 @@ void setup() {
   ellipse(0, 0, (float) (2 * radius[0]), (float) (2 * radius[1]));
   popMatrix();
   noStroke();
-  fill(cycleColor[0]);
+  fill(cycleColors[0]);
   circle((float) trbl[0][0], (float) trbl[0][1], 8);
   circle((float) trbl[1][0], (float) trbl[1][1], 8);
   circle((float) trbl[2][0], (float) trbl[2][1], 8);
@@ -43,7 +43,7 @@ void setup() {
   double majorLength = 
 
   strokeWeight(1);
-  stroke(cycleColor[2]);
+  stroke(cycleColors[2]);
   line((float) majorAxis[0][0], (float) majorAxis[0][1],
     (float) majorAxis[1][0], (float) majorAxis[1][1]);
   line((float) majorAxis[0][0], (float) majorAxis[0][1],
@@ -51,9 +51,9 @@ void setup() {
   noStroke();
   fill(0);
   circle((float) ptF[0], (float) ptF[1], 8);
-  fill(cycleColor[4]);
+  fill(cycleColors[4]);
   circle((float) midAF[0], (float) midAF[1], 8);
-  fill(cycleColor[6]);
+  fill(cycleColors[6]);
   circle((float) interMajor[0], (float) interMajor[1], 8);
   circle((float) interMajorC[0], (float) interMajorC[1], 8);
   fill(0);
