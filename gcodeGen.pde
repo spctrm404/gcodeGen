@@ -49,7 +49,7 @@ float pxPerMm = 0.35277849670096045553691224446998;
 //float pxPerMm = 1;
 int xyFeedrate = 6000;
 int zFeedrate = 2000;
-float g1z = -1;
+float g1z = -2;
 float g0z = 5;
 float g4 = 0.05; //50ms
 

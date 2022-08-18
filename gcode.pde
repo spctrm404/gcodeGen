@@ -18,7 +18,7 @@ String convertSvgToGCode(ArrayList<HashMap> svgHmList) {
   println("g0z = " + g0z);
   println("g4 = " + g4);
   String gCodes = "";
-  //add safe start cmd;
+  gCodes += "G90 G21 G94";
   for (int i = 1; i < svgHmList.size(); i++) {
     HashMap<String, String> hm = (HashMap<String, String>)svgHmList.get(i);
     String name = hm.get("name");
@@ -127,7 +127,7 @@ String gLine(double x1, double y1, double x2, double y2, double[] matrix, float 
   gCode += "G4 P" + g4  + "\n";
   gCode += "G1 Z" + g1z + " F" + zFeedrate  + "\n";
   gCode += "G4 P" + g4  + "\n";
-  coord[0] = x1;
+  coord[0] = x2;
   coord[1] = y2;
   tCoord = applyMatrix(coord, matrix, pxPerMm);
   gCode += "G1 X" + String.format("%.6f", tCoord[0]) + " Y" + String.format("%.6f", tCoord[1]) + " F" + xyFeedrate  + "\n";
