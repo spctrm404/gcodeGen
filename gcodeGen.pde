@@ -1,3 +1,16 @@
+//>>> G3X202.4221Y421.2506I13624728.6845J-227370381.8265F6000
+//ok
+//>>> G2X135.8861Y417.9554I-217.4286J3716.8451F6000
+//[Error] An error was detected while sending 'G3X202.4221Y421.2506I13624728.6845J-227370381.8265F6000': error: Invalid gcode ID:33. Streaming has been paused.
+//**** The communicator has been paused ****
+
+//**** Pausing file transfer. ****
+
+//[Error] An error was detected while sending 'G2X135.8861Y417.9554I-217.4286J3716.8451F6000': error: Invalid gcode ID:33. Streaming has been paused.
+//**** The communicator has been paused ****
+
+//**** Pausing file transfer. ****
+
 // to do
 // check for
 // check equal and contain (case)
@@ -41,15 +54,16 @@ char[] supportedDCmdList = {
 boolean debug = false;
 boolean render = true;
 
-String fileName = "sz_print_01-ai.svg";
+//String fileName = "sz_print_01-ai.svg";
 //String fileName = "sz_print_02-ai.svg";
+String fileName = "sz_print_02-ai_alt.svg";
 //String fileName = "sample1_ai.svg";
 float pxPerMm = 0.35277849670096045553691224446998;
 //float pxPerMm = 0.5;
 //float pxPerMm = 1;
 int xyFeedrate = 6000;
 int zFeedrate = 2000;
-float g1z = -2;
+float g1z = -1;
 float g0z = 5;
 float g4 = 0.05; //50ms
 
