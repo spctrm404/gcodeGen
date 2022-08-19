@@ -1,7 +1,7 @@
 void setup() {
   double[] center = {400, 400};
-  double[] radius = {150, 100};
-  float angleDeg = 5;
+  double[] radius = {150, 50};
+  float angleDeg = 60;
   double[][] trbl = {{center[0] + radius[1] * Math.cos(Math.toRadians(-90 + angleDeg)), center[1] + radius[1] * Math.sin(Math.toRadians(-90 + angleDeg))},
     {center[0] + radius[0] * Math.cos(Math.toRadians(0 + angleDeg)), center[1] + radius[0] * Math.sin(Math.toRadians(0 + angleDeg))},
     {center[0] + radius[1] * Math.cos(Math.toRadians(90 + angleDeg)), center[1] + radius[1] * Math.sin(Math.toRadians(90 + angleDeg))},
@@ -27,7 +27,7 @@ void setup() {
   double rlLength = distance(trbl[1], trbl[3]);
   double[][] majorAxis = {
     tbLength > rlLength ? trbl[0] : trbl[1],
-    tbLength > rlLength ? trbl[2] : trbl[3]}; //A, B
+    tbLength > rlLength ? trbl[2] : trbl[3]}; //B, A
   double[][] minorAxis = {
     tbLength <= rlLength ? trbl[0] : trbl[1],
     tbLength <= rlLength ? trbl[2] : trbl[3]}; //C, D
@@ -35,12 +35,16 @@ void setup() {
   double[] ptF = pointOnLine(minorAxis[0], majorAxis[0], deltaLength * 0.5); //F
   double[] midAF = midpoint(majorAxis[0], ptF);
   double[] perp = perpendicularToLine(ptF, majorAxis[0]);
-  double[] interMajor = lineLineIntersection_4(midAF, perp, majorAxis[0], majorAxis[1]); //1
+  double[] interMajor = lineLineIntersection_4(midAF, perp, majorAxis[0], majorAxis[1]); //3
   double[] interMinor = lineLineIntersection_4(midAF, perp, minorAxis[0], minorAxis[1]); //2
-  double[] interMajorC = pointSymetry(interMajor, center); //3
+  double[] interMajorC = pointSymetry(interMajor, center); //1
   double[] interMinorC = pointSymetry(interMinor, center); //4
-  double minorLength = 
-  double majorLength = 
+  double minorLength = distance(minorAxis[0], interMinor);
+  double majorLength = distance(majorAxis[1], interMajorC);
+  double angleAC = angle(interMinor, interMajorC);
+  double angleCB = angle(interMinor, interMajor);
+  double angleBD = (angleAC > 0) ? angleAC - Math.PI : angleAC + Math.PI;
+  double angleDA = (angleCB > 0) ? angleCB - Math.PI : angleCB + Math.PI;
 
   strokeWeight(1);
   stroke(cycleColors[2]);
@@ -56,10 +60,23 @@ void setup() {
   fill(cycleColors[6]);
   circle((float) interMajor[0], (float) interMajor[1], 8);
   circle((float) interMajorC[0], (float) interMajorC[1], 8);
-  fill(0);
+  fill(cycleColors[8]);
   circle((float) interMinor[0], (float) interMinor[1], 8);
   circle((float) interMinorC[0], (float) interMinorC[1], 8);
-
+  noFill();
+  stroke(cycleColors[10]);
+  arc((float) interMinor[0], (float) interMinor[1],
+    (float) (2 * minorLength), (float) (2 * minorLength),
+    (float) angleAC, (float) angleCB);
+  arc((float) interMajor[0], (float) interMajor[1],
+    (float) (2 * majorLength), (float) (2 * majorLength),
+    (float) angleCB, (float) angleBD);
+  arc((float) interMinorC[0], (float) interMinorC[1],
+    (float) (2 * minorLength), (float) (2 * minorLength),
+    (float) angleBD, (float) angleDA);
+  arc((float) interMajorC[0], (float) interMajorC[1],
+    (float) (2 * majorLength), (float) (2 * majorLength),
+    (float) angleDA, (float) angleAC);
 
 
   // double[] mpTR = midpoint(trbl[0], trbl[1]);
