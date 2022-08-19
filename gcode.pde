@@ -18,7 +18,7 @@ String convertSvgToGCode(ArrayList<HashMap> svgHmList) {
   println("g0z = " + g0z);
   println("g4 = " + g4);
   String gCodes = "";
-  gCodes += "G90 G21 G94";
+  gCodes += "G90 G21 G94\n";
   for (int i = 1; i < svgHmList.size(); i++) {
     HashMap<String, String> hm = (HashMap<String, String>)svgHmList.get(i);
     String name = hm.get("name");
