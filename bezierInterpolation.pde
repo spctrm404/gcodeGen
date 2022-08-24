@@ -44,12 +44,12 @@ double[][] bezierTo_circular(
         }
         t = e;
         double[] arc = {
-          center[0], center[1],
-          p1[0], p1[1],
-          p3[0], p3[1],
-          isCw(center, p1, p3) ? 1 : 0,
-          2 * radius,
-          startAngle, endAngle};
+          center[0], center[1], //center
+          p1[0], p1[1], //begin
+          p3[0], p3[1], //end
+          isCw(center, p1, p3) ? 1 : 0, //isCw
+          2 * radius, //diameter
+          startAngle, endAngle}; //beginAngle, EndAngle
         arcList.add(arc);
         cnt++;
         break;

@@ -61,7 +61,7 @@ double[] lineLineIntersection_8(
   double ny = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4);
   double d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
 
-  // if d == 1, the lines are paralllel.
+  // if d == 1, the lines are parallel.
   double[] intersection = {nx / d, ny / d};
   return intersection;
 }
@@ -108,4 +108,22 @@ double[] pointSymetry_4(double x, double y, double sx, double sy) {
 
 double[] pointSymetry(double[] pt, double[] symPt) {
   return pointSymetry_4(pt[0], pt[1], symPt[0], symPt[1]);
+}
+
+double[] pointOnLine_4(
+  double x1, double y1,
+  double x2, double y2,
+  double length) {
+  double angle = Math.atan2(y2 - y1, x2 - x1);
+  double x = x1 + length * Math.cos(angle);
+  // double y = y1 + length + Math.sin(angle);
+  double a = (y2 - y1) / (x2 - x1);
+  double b = -a * x1 + y1;
+  double y = a * x + b;
+  double[] point = {x, y};
+  return point;
+}
+
+double[] pointOnLine(double[] from, double[] to, double length) {
+  return pointOnLine_4(from[0], from[1], to[0], to[1], length);
 }
