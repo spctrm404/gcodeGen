@@ -56,14 +56,14 @@ boolean render = true;
 
 //String fileName = "sz_print_01-ai.svg";
 //String fileName = "sz_print_02-ai.svg";
-String fileName = "sz_print_02-ai_alt.svg";
-//String fileName = "sample1_ai.svg";
-float pxPerMm = 0.35277849670096045553691224446998;
+// String fileName = "sz_print_01-ai_alt.svg";
+// float pxPerMm = 0.35277849670096045553691224446998;
+String fileName = "testPatt1-01.svg";
+float pxPerMm = 0.1;
 //float pxPerMm = 0.5;
-//float pxPerMm = 1;
 int xyFeedrate = 6000;
 int zFeedrate = 2000;
-float g1z = -1;
+float g1z = -0.5;
 float g0z = 5;
 float g4 = 0.05; //50ms
 
